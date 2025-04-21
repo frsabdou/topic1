@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel - Topic One </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/3a22b81a44.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      body {
+        background-color: #f9f9f9;
+        padding: 20px;
+      }
+      * {
+        color: #160042;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Plus Jakarta Sans;
+        scroll-behavior: smooth;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #fff;
+        border-radius: 22px;
+        box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.03);
+        overflow: hidden;
+      }
+      .navbar {
+        padding: 20px 30px;
+        border-bottom: 1px solid #ececec;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .navbar-brand {
+        font-size: 1.2em;
+        font-weight: 600;
+        text-decoration: none;
+        color: #160042;
+      }
+      .nav-links {
+        display: flex;
+        gap: 20px;
+      }
+      .nav-link {
+        text-decoration: none;
+        font-size: 0.95em;
+        color: #666;
+        transition: all 200ms ease;
+      }
+      .nav-link:hover {
+        color: #642eff;
+      }
+      .nav-link.active {
+        color: #642eff;
+        font-weight: 500;
+      }
+      .user-info {
+        font-weight: 500;
+        margin-right: 20px;
+      }
+      .card {
+        padding: 0;
+      }
+      .card-header {
+        background-color: #642eff;
+        color: white;
+        padding: 20px 30px;
+      }
+      .card-header h4 {
+        margin: 0;
+        font-size: 1.4em;
+      }
+      .card-body {
+        padding: 30px;
+      }
+      h5 {
+        font-size: 1.2em;
+        margin-bottom: 15px;
+        color: #160042;
+      }
+      p {
+        margin-bottom: 20px;
+        color: #666;
+        font-size: 0.95em;
+      }
+      .btn {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 0.9em;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 300ms ease-out;
+        text-decoration: none;
+        display: inline-block;
+        border: none;
+      }
+      .btn-danger {
+        background-color: #ff4757;
+        color: white;
+      }
+      .btn-danger:hover {
+        background-color: #ff6b81;
+      }
+      .btn-outline {
+        background-color: transparent;
+        border: 1px solid #ff4757;
+        color: #ff4757;
+      }
+      .btn-outline:hover {
+        background-color: #ffebee;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #ececec;
+      }
+      th {
+        font-weight: 600;
+        font-size: 0.9em;
+        color: #642eff;
+      }
+      .alert {
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 0.9em;
+      }
+      .alert-success {
+        background-color: #e8f5e9;
+        color: #388e3c;
+        border: 1px solid #a5d6a7;
+      }
+      .alert-danger {
+        background-color: #ffebee;
+        color: #d32f2f;
+        border: 1px solid #ef9a9a;
+      }
+      .text-danger {
+        color: #d32f2f;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navbar">
+        <a class="navbar-brand" href="#">Topic One Web</a>
+        <div class="nav-links">
+          <a class="nav-link" href="/account">My Account</a>
+          <a class="nav-link active" href="/admin">Admin Panel</a>
+        </div>
+        <div>
+          <span id="user-info" class="user-info"></span>
+          <a href="/logout" class="btn btn-outline">Logout</a>
+        </div>
+      </nav>
+
+      <div class="card">
+        <div class="card-header">
+          <h4>Admin Panel</h4>
+        </div>
+        <div class="card-body">
+          <div id="message-container"></div>
+          
+          <h5>User Management</h5>
+          <p>Here you can manage users of the application.</p>
+          
+          <div id="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="users-table-body">
+                <tr>
+                  <td colspan="2">Loading users...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Fetch user information
+        fetch('/api/user-info')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Not authenticated');
+            }
+            return response.json();
+          })
+          .then(data => {
+            document.getElementById('user-info').textContent = data.username;
+            
+            // If not admin, redirect
+            if (!data.isAdmin) {
+              window.location.href = '/account';
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            window.location.href = '/login';
+          });
+        
+        // Load users
+        loadUsers();
+        
+        // Function to load users
+        function loadUsers() {
+          fetch('/api/users')
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Access denied');
+              }
+              return response.json();
+            })
+            .then(data => {
+              const tableBody = document.getElementById('users-table-body');
+              tableBody.innerHTML = '';
+              
+              data.users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                  <td>${user.username}</td>
+                  <td>
+                    <button class="btn btn-danger delete-user-btn" data-username="${user.username}">Delete</button>
+                  </td>
+                `;
+                tableBody.appendChild(row);
+              });
+              
+              // Add event listeners to delete buttons
+              document.querySelectorAll('.delete-user-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                  const username = this.getAttribute('data-username');
+                  deleteUser(username);
+                });
+              });
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              document.getElementById('users-table-body').innerHTML = 
+                `<tr><td colspan="2" class="text-danger">Failed to load users: ${error.message}</td></tr>`;
+            });
+        }
+        
+        // Function to delete a user
+        function deleteUser(username) {
+          if (confirm(`Are you sure you want to delete user "${username}"?`)) {
+            fetch('/api/delete-user', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ username })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                const messageContainer = document.getElementById('message-container');
+                messageContainer.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+                
+                // Reload users
+                loadUsers();
+                
+                // If carlos was deleted, show lab completed message
+                if (username === 'carlos') {
+                  messageContainer.innerHTML += `
+                    <div class="alert alert-success">
+                      <strong>Lab Complete!</strong> You have successfully exploited the "User role controlled by request parameter" vulnerability.
+                    </div>`;
+                }
+              } else {
+                document.getElementById('message-container').innerHTML = 
+                  `<div class="alert alert-danger">${data.error}</div>`;
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              document.getElementById('message-container').innerHTML = 
+                `<div class="alert alert-danger">Error deleting user: ${error.message}</div>`;
+            });
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

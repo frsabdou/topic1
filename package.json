@@ -1,0 +1,19 @@
+{
+  "name": "topic-one-web",
+  "version": "1.0.0",
+  "description": "A web application demonstrating the 'User role controlled by request parameter' vulnerability",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

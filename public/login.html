@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Topic One </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/3a22b81a44.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      body {
+        background-color: #f9f9f9;
+      }
+      * {
+        color: #160042;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Plus Jakarta Sans;
+        scroll-behavior: smooth;
+      }
+      .container {
+        max-width: 440px;
+        margin: 50px auto;
+        padding: 40px 50px;
+        background-color: #fff;
+        border-radius: 22px;
+        box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.03);
+      }
+      h4 {
+        font-size: 1.8em;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+      form {
+        margin-top: 20px;
+      }
+      label {
+        font-size: 0.9em;
+        display: block;
+        margin-bottom: 6px;
+      }
+      input[type="text"],
+      input[type="password"] {
+        font-size: 0.9em;
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ececec;
+        border-radius: 10px;
+      }
+      .form-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 25px;
+      }
+      .btn {
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 1em;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 300ms ease-out;
+        text-decoration: none;
+      }
+      .btn-primary {
+        background-color: #642eff;
+        color: #fff;
+        border: none;
+      }
+      .btn-primary:hover {
+        background-color: #7c4cff;
+      }
+      .btn-link {
+        background: none;
+        border: none;
+        color: #642eff;
+        padding: 10px 0;
+      }
+      .btn-link:hover {
+        text-decoration: underline;
+      }
+      .test-account {
+        font-size: 0.8em;
+        color: #666;
+        text-align: center;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+      }
+      .alert {
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-size: 0.9em;
+      }
+      .alert-danger {
+        background-color: #ffebee;
+        color: #d32f2f;
+        border: 1px solid #ef9a9a;
+      }
+      .alert-success {
+        background-color: #e8f5e9;
+        color: #388e3c;
+        border: 1px solid #a5d6a7;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h4>Login</h4>
+      <div id="message-container"></div>
+      <form id="login-form" action="/login" method="POST">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required />
+        
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+        
+        <div class="form-footer">
+          <button type="submit" class="btn btn-primary">Login</button>
+          <a href="/register" class="btn-link">Need an account? Register</a>
+        </div>
+      </form>
+      <div class="test-account">
+        <p>Test account: fares:fares11</p>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        const message = urlParams.get('message');
+        const messageContainer = document.getElementById('message-container');
+        
+        if (error) {
+          messageContainer.innerHTML = `<div class="alert alert-danger">${error}</div>`;
+        } else if (message) {
+          messageContainer.innerHTML = `<div class="alert alert-success">${message}</div>`;
+        }
+      });
+    </script>
+  </body>
+</html>
