@@ -201,7 +201,7 @@
 
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        // Fetch user information
+        
         fetch('/api/user-info')
           .then(response => {
             if (!response.ok) {
@@ -212,7 +212,7 @@
           .then(data => {
             document.getElementById('user-info').textContent = data.username;
             
-            // If not admin, redirect
+            
             if (!data.isAdmin) {
               window.location.href = '/account';
             }
@@ -222,10 +222,10 @@
             window.location.href = '/login';
           });
         
-        // Load users
+        
         loadUsers();
         
-        // Function to load users
+        
         function loadUsers() {
           fetch('/api/users')
             .then(response => {
@@ -249,7 +249,7 @@
                 tableBody.appendChild(row);
               });
               
-              // Add event listeners to delete buttons
+              
               document.querySelectorAll('.delete-user-btn').forEach(button => {
                 button.addEventListener('click', function() {
                   const username = this.getAttribute('data-username');
@@ -264,7 +264,7 @@
             });
         }
         
-        // Function to delete a user
+        
         function deleteUser(username) {
           if (confirm(`Are you sure you want to delete user "${username}"?`)) {
             fetch('/api/delete-user', {
@@ -280,10 +280,10 @@
                 const messageContainer = document.getElementById('message-container');
                 messageContainer.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
                 
-                // Reload users
+                
                 loadUsers();
                 
-                // If carlos was deleted, show lab completed message
+                
                 if (username === 'carlos') {
                   messageContainer.innerHTML += `
                     <div class="alert alert-success">

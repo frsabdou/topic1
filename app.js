@@ -1,4 +1,3 @@
-// app.js
 require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -9,7 +8,7 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -17,21 +16,21 @@ app.use(session({
   secret: 'secret-key',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Set to true in production with HTTPS
+  cookie: { secure: false } 
 }));
 
-// Serve static files
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Data storage
+
 const USERS_FILE = path.join(__dirname, 'data', 'users.json');
 
-// Ensure data directory exists
+
 if (!fs.existsSync(path.join(__dirname, 'data'))) {
   fs.mkdirSync(path.join(__dirname, 'data'));
 }
 
-// Initialize users data if not exists
+
 if (!fs.existsSync(USERS_FILE)) {
   const initialUsers = {
     'fares': { password: 'fares11', Admin: false },
@@ -40,7 +39,7 @@ if (!fs.existsSync(USERS_FILE)) {
   fs.writeFileSync(USERS_FILE, JSON.stringify(initialUsers, null, 2));
 }
 
-// Helper functions for user data
+
 function getUsers() {
   const data = fs.readFileSync(USERS_FILE, 'utf8');
   return JSON.parse(data);
@@ -53,7 +52,7 @@ function saveUsers(users) {
 function addUser(username, password) {
   const users = getUsers();
   if (users[username]) {
-    return false; // User already exists
+    return false; 
   }
   users[username] = { password, Admin: false };
   saveUsers(users);
@@ -63,14 +62,14 @@ function addUser(username, password) {
 function deleteUser(username) {
   const users = getUsers();
   if (!users[username]) {
-    return false; // User doesn't exist
+    return false; 
   }
   delete users[username];
   saveUsers(users);
   return true;
 }
 
-// Routes
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -84,10 +83,10 @@ app.post('/login', (req, res) => {
   const users = getUsers();
   
   if (users[username] && users[username].password === password) {
-    // Set session
+    
     req.session.user = username;
     
-    // Set Admin cookie - THIS IS THE VULNERABLE PART
+    
     res.cookie('Admin', users[username].Admin.toString());
     
     res.redirect('/account');
@@ -122,16 +121,16 @@ app.get('/account', (req, res) => {
 });
 
 app.get('/admin', (req, res) => {
-  // Check if user is not logged in
+  
   if (!req.session.user) {
     return res.status(401).send('You must be logged in to access the admin panel');
   }
   
-  // Check admin access from cookie - THIS IS THE VULNERABLE PART
+  
   const isAdmin = req.cookies.Admin === 'true';
   
   if (!isAdmin) {
-    // Changed message to match the required one
+    
     return res.status(403).send('Admin interface only available if logged in as an administrator');
   }
   
@@ -158,7 +157,7 @@ app.get('/api/users', (req, res) => {
     return res.status(401).json({ error: 'Not authenticated' });
   }
   
-  // Check admin access from cookie
+  
   const isAdmin = req.cookies.Admin === 'true';
   
   if (!isAdmin) {
@@ -178,7 +177,7 @@ app.post('/api/delete-user', (req, res) => {
     return res.status(401).json({ error: 'Not authenticated' });
   }
   
-  // Check admin access from cookie
+  
   const isAdmin = req.cookies.Admin === 'true';
   
   if (!isAdmin) {
